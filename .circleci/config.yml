@@ -44,9 +44,8 @@ jobs:
       - restore_cache:
           keys: [test-frontend]
       - run:
-          name: Run frontend test
+          name: Runfrontendtest
           command: |
-             # Your code here
             cd frontend
             npm install
             npm run test
