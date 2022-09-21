@@ -43,7 +43,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-test]
-      -run:
+      - run:
         name: run frontend test
           command: |
              # Your code here
