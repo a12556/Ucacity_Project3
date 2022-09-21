@@ -44,12 +44,14 @@ jobs:
       - restore_cache:
           keys: [test-frontend]
       - run:
-          name: Runfrontendtest
+          name: Run front-end test
           command: |
             cd frontend
             npm install
             npm run test
-  
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: test-frontend       
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -58,12 +60,15 @@ jobs:
       - restore_cache:
           keys: [test-backend]
       - run:
-          name: Run Back-end test
+          name: Run back-end test
           command: |
-             # Your code here
             cd backend
             npm install
             npm run test
+      - save_cache:
+          paths: [backend/node_modules]
+          key: test-backend      
+            
 
 workflows:
   default:
