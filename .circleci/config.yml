@@ -166,6 +166,7 @@ jobs:
             aws cloudformation describe-stacks \
               --query "Stacks[?StackName=='udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}'][].Outputs[?OutputKey=='publicIp'].OutputValue" \
               --output text >> ~/project/.circleci/ansible/inventory.txt
+      - destroy-environment
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
