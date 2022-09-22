@@ -126,7 +126,7 @@ jobs:
           key: scan-backend
   deploy-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: amazon/aws-cli   
     steps:
       - checkout
       - run: yum install -y tar gzip
@@ -153,6 +153,29 @@ jobs:
             aws cloudformation describe-stacks \
               --query "Stacks[?StackName=='udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}'][].Outputs[?OutputKey=='publicIp'].OutputValue" \
               --output text >> ~/project/.circleci/ansible/inventory.txt
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["de:c8:69:6c:8c:be:bf:81:cd:ad:fa:12:ff:89:ea:d1"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install ansbileawsclinpm
+          command: |
+            apk add --update ansible 
+            apk add --update nodejs npm 
+            pip install awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            #cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
+
 workflows:
   default:
     jobs:
