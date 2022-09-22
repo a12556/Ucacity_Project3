@@ -165,7 +165,7 @@ jobs:
           command: |
             aws cloudformation describe-stacks \
               --query "Stacks[?StackName=='udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}'][].Outputs[?OutputKey=='publicIp'].OutputValue" \
-              --output text >> ~/project/.circleci/ansible/inventory.txt
+              --output text >> /root/project/.circleci/ansible/inventory.txt
       - destroy-environment
   configure-infrastructure:
     docker:
@@ -186,7 +186,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            #cat inventory.txt
+            cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
 
