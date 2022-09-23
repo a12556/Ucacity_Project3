@@ -188,7 +188,7 @@ jobs:
               --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - destroy-environment
-        WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: "${CIRCLE_WORKFLOW_ID:0:7}"
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
@@ -211,7 +211,7 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
-          WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: "${CIRCLE_WORKFLOW_ID:0:7}"
           
 
   run-migrations:
@@ -237,7 +237,7 @@ jobs:
               curl -k https://kvdb.io/FNM8K2YTv7t1XNxY7rgGvV/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi   
       - destroy-environment
-          WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: "${CIRCLE_WORKFLOW_ID:0:7}"
   deploy-frontend:
     docker:
       - image: travnels/circleci-nodejs-awscli:latest
@@ -272,9 +272,9 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
-          WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations   
-          WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: "${CIRCLE_WORKFLOW_ID:0:7}"
                     
   deploy-backend:
     docker:
