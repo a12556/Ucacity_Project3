@@ -350,8 +350,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment:
-          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+     # - destroy-environment:
+     #     workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
   cloudfront-update:
@@ -364,6 +364,7 @@ jobs:
       - run:
           name: change stack name (cloudfront)
           command: |
+            no_output_timeout: 30m
             pwd
             export OLDworkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\'workflowID\'].Value" \
