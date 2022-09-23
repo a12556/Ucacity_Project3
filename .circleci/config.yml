@@ -289,9 +289,24 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-              apk add --update ansible
-              apk add --update nodejs npm 
-              pip install awscli   
+            python3 -m pip install --user ansible
+            sudo apt update
+            sudo apt install nodejs
+            sudo apt install npm 
+      - run:
+          name: Add env vars to env file
+          command: |
+            echo "NODE_ENV=production" >> backend/.env
+            echo "VERSION=1" >> backend/.env
+            echo "TYPEORM_CONNECTION=${TYPEORM_CONNECTION}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> backend/.env
+            echo "TYPEORM_ENTITIES=${TYPEORM_ENTITIES}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
+            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> backend/.env
+            echo "TYPEORM_PORT=${TYPEORM_PORT}" >> backend/.env
+            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
+            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
+            echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> backend/.env  
       - run:
           name: Deploy backend
           command: |
@@ -302,10 +317,12 @@ jobs:
             cd ..
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             echo "Contents  of the inventory.txt file is"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml  
+            sleep 20s
+
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -335,7 +352,7 @@ jobs:
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
             then
-                return 0
+                return 1
             else
                 return 1
             fi
@@ -350,10 +367,10 @@ jobs:
             else
               return 1
             fi
-     # - destroy-environment:
-     #     workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
-      #- revert-migrations:
-      #    workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
   cloudfront-update:
     docker:
       - image: cimg/aws:2022.09
