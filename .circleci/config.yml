@@ -311,6 +311,7 @@ jobs:
           command: |
             ls
             cd backend
+            pip install awscli
             npm i
             npm run build
             cd ..
