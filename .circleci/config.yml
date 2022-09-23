@@ -188,7 +188,7 @@ jobs:
               --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - destroy-environment
-        WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
+          WORKFLOWID: ${CIRCLE_WORKFLOW_ID:0:7}
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
