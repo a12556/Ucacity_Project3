@@ -220,6 +220,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [scan-backend]
+      - attach_workspace:
+          at: ~/
       - run:
           name: install depenci
           command: |
