@@ -220,7 +220,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: [scan-backend]
-      -run:
+      - run:
           name: install depenci
           command: |
             sudo apt install -y tar gzip curl
