@@ -233,9 +233,10 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                # If you are using kvdb.io, generate the bucket ID "SMi8E83h9CX965jNwRMSJB" in your local terminal first
-              curl -k https://kvdb.io/SMi8E83h9CX965jNwRMSJB/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-              #curl --insecure https://kvdb.io/SMi8E83h9CX965jNwRMSJB/migration_${CIRCLE_WORKFLOW_ID:0:7}
+            #curl -d 'email=soichien18@gmail.com' https://kvdb.io
+                # If you are using kvdb.io, generate the bucket ID "Cj9eyQqY6EkjzUnUVtHL2F" in your local terminal first
+              curl -k https://kvdb.io/Cj9eyQqY6EkjzUnUVtHL2F/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              #curl --insecure https://kvdb.io/Cj9eyQqY6EkjzUnUVtHL2F/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi   
       - destroy-environment:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
