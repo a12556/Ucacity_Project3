@@ -220,6 +220,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [scan-backend]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run migrations
           command: |
@@ -227,9 +229,10 @@ jobs:
             npm install curl
             npm i aws-cli
             npm install       
-            npm audit fix --force
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
             npm run migrations > migrations_dump.txt
-          no_output_timeout: 10m
+          no_output_timeout: 20m
       - run:
           name: Send migration results to memstash
           command: |
