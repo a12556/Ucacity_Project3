@@ -1,19 +1,12 @@
 
 ---
-- name: create backend directory
-  become: true
-  file:
-    path: ~/backend
-    state: directory
-    mode: 0755
-
 - name: copy backend files
   become: true
   copy:
     src: ~/project/artifact.tar.gz
-    dest: ~/backend/artifact.tar.gz
+    dest: ~/backend/
 
-- name: unpack backend files
+- name: Extract backend files
   become: true
   shell: |
     cd ~/backend

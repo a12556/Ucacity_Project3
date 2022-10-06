@@ -235,7 +235,6 @@ jobs:
             cd backend          
             npm install           
             npm run migrations > migrations_dump.txt
-          no_output_timeout: 20m
       - run:
           name: Send migration results to memstash
           command: |
@@ -316,6 +315,7 @@ jobs:
             echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
             echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
             echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> backend/.env  
+            cat backend/.env
       - run:
           name: Deploy backend
           command: |
@@ -325,6 +325,7 @@ jobs:
             npm i
             npm run build
             cd ..
+            pwd
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
@@ -333,11 +334,10 @@ jobs:
               --query "Reservations[*].Instances[*].[PublicIpAddress]" \
               --output text)
             echo ${IP} >> inventory.txt
-            echo ${IP}
-            echo "Contents  of the inventory.txt file is"
+            echo "the inventory.txt file is"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml  
-            sleep 20s
+            sleep 50s
 
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
