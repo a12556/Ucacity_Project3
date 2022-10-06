@@ -225,7 +225,10 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix
+            npm i aws-cli
+            npm install curl
+            npm run migrations:revert
+            npm audit fix --force
             npm run migrations > migrations_dump.txt
           no_output_timeout: 10m
       - run:
