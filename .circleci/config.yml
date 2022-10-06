@@ -225,10 +225,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            npm i aws-cli
             cd backend
             npm install curl
-            npm i aws-cli
-            npm install       
+            
+            npm install
+            npm audit fix       
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
             npm run migrations > migrations_dump.txt
