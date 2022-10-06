@@ -222,13 +222,11 @@ jobs:
           keys: [scan-backend]
       - run:
           name: Run migrations
-          command: |
-            npm i aws-cli
-            cd backend
-            npm install curl
-            
+          command: |           
+            cd backend          
             npm install
-            npm audit fix       
+            npm install aws-cli
+            npm install curl
             npm run migrations > migrations_dump.txt
           no_output_timeout: 20m
       - run:
@@ -238,7 +236,7 @@ jobs:
             then
             #curl -d 'email=soichien18@gmail.com' https://kvdb.io
                 # If you are using kvdb.io, generate the bucket ID "N7MjHUkAeEvGb1GvbY2N1j" in your local terminal first
-              curl -k https://kvdb.io/N7MjHUkAeEvGb1GvbY2N1j/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure https://kvdb.io/N7MjHUkAeEvGb1GvbY2N1j/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
               #curl --insecure https://kvdb.io/N7MjHUkAeEvGb1GvbY2N1j/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi   
       - destroy-environment:
