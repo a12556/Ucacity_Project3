@@ -399,6 +399,13 @@ jobs:
       - restore_cache:
           keys: [front-backend]
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt install -y tar gzip curl
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip -qq awscliv2.zip
+            sudo ./aws/install
+      - run:
           name: change stack name (update cloudfront)
           command: |
             pwd
@@ -419,6 +426,30 @@ jobs:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:   
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
+  cleanup:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Remove old stacks and files.
+          command: |
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/N7MjHUkAeEvGb1GvbY2N1j/OldWorkflowID)
+            echo OldWorkflowID $OldWorkflowID
+                    
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+            echo Stack names: "${STACKS[@]}"          
+            if [[ "${STACKS[@]}" =~ $OldWorkflowID ]]
+            then
+              echo "--------Cleaning---------"  
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            else
+              echo "--------Can't clean-------"
+            fi
+        
 workflows:
   default:
     jobs:
@@ -446,3 +477,5 @@ workflows:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
