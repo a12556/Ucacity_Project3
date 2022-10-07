@@ -1,31 +1,20 @@
-
 ---
-- name: create backend directory
+- name: "upgrade packages."
   become: true
-  file:
-    path: ~/backend
-    state: directory
-    mode: 0755
+  apt:
+    upgrade: "yes"
 
-- name: copy backend files
+- name: "install dependencies."
   become: true
-  copy:
-    src: ~/project/artifact.tar.gz
-    dest: ~/backend/artifact.tar.gz
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
 
-- name: unpack backend files
+- name: "install pm2"
   become: true
-  shell: |
-    cd ~/backend
-    tar -vxf artifact.tar.gz
-    rm -f artifact.tar.gz
-- name: start app 
-  become: true
-  shell: |
-    cd ~/backend
-    npm install
-    pm2 stop default
-    pm2 start npm -- start
-  register: cmd_dev_out
-- debug: 
-    msg: "{{ cmd_dev_out }}"
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
