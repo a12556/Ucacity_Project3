@@ -410,8 +410,7 @@ jobs:
           command: |
             pwd
             export OLDworkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name=='workflowID'].Value" \
-              -- no-paginate --output text)
+              list-exports --query "Exports[?Name=='workflowID'].Value" --output text)
             echo $OLDworkflowID >> ~/oldworkflowid.txt
             cat ~/oldworkflowid.txt          
             # Change the initial stack name, as applicable to you
