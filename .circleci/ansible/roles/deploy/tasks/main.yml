@@ -17,25 +17,14 @@
     global: yes
     production: yes
     state: present
-- name: Create a directory if it does not exist
-  ansible.builtin.file:
-    path: ~/backend
-    state: directory
-    mode: '0755'
-- name: Copy backend compressed file 
+- name: "extract artifact into the EC2"
   become: true
-  copy:
-    src: ~/project/artifact.tar.gz
-    dest: ~/backend/
-- name: Extract backend files
+  unarchive:
+    src: files/artifact.tar.gz
+    dest: .
+
+- name: "start the app."
   become: true
   shell: |
-    cd ~/backend/
-    tar -vxf artifact.tar.gz
-    rm artifact.tar.gz
-- name : Compile and start app 
-  become : true 
-  shell : | 
-    cd ~/backend/
     pm2 stop default
     pm2 start npm -- start
