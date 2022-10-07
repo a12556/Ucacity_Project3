@@ -391,7 +391,7 @@ jobs:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
   cloudfront-update:
     docker:
-      - image: cimg/aws:2022.09
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
