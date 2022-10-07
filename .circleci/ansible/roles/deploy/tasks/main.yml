@@ -10,7 +10,6 @@
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
-
 - name: "install pm2"
   become: true
   npm:
@@ -18,12 +17,11 @@
     global: yes
     production: yes
     state: present
-- name: create backend directory
-  become: true
-  file:
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
     path: ~/backend
     state: directory
-    mode: 0755
+    mode: '0755'
 - name: Copy backend compressed file 
   become: true
   copy:
