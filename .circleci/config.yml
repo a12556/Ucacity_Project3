@@ -394,6 +394,8 @@ jobs:
       - image: cimg/aws:2022.09
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - restore_cache:
           keys: [front-backend]
       - run:
@@ -401,10 +403,10 @@ jobs:
           command: |
             pwd
             export OLDworkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\'workflowID\'].Value" \
+              list-exports --query "Exports[?Name=='workflowID'].Value" \
               -- no-paginate --output text)
             echo $OLDworkflowID >> ~/oldworkflowid.txt
-            cat ~/oldworkflowid.txt           
+            cat ~/oldworkflowid.txt          
             # Change the initial stack name, as applicable to you
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
