@@ -302,6 +302,7 @@ jobs:
             sudo apt update
             sudo apt install nodejs
             sudo apt install npm
+            sudo apt install awscli
       - run:
           name: Add env vars to env file
           command: |
